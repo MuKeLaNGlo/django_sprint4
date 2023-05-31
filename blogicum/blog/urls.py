@@ -16,11 +16,6 @@ urlpatterns = [
          views.delete_comment, name='delete_comment'),
     path('category/<slug:category_slug>/', views.category_posts,
          name='category_posts'),
-    path('profile/<slug:username>/', views.profile, name='profile'),
     path('profile/edit_profile/', views.edit_profile, name='edit_profile'),
-    # path(
-    #     'redirect_to_profile/',
-    #     views.redirect_to_profile,
-    #     name='redirect_to_profile'
-    # ),
+    path('profile/<slug:username>/', views.profile, name='profile'),
 ]
