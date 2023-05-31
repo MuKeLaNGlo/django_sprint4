@@ -51,6 +51,19 @@ def category_posts(request, category_slug):
     return render(request, template, context)
 
 
+def post_detail(request, id):
+    template = 'blog/detail.html'
+    post = get_object_or_404(Post, id=id, is_published=True)
+    comments = post.comments.all().order_by('pub_date')
+    form = CommentForm()
+    context = {
+        'post': post,
+        'comments': comments,
+        'form': form,
+    }
+    return render(request, template, context)
+
+
 @login_required
 def create_post(request):
     template = 'blog/create.html'
@@ -161,19 +174,6 @@ def delete_comment(request, post_id, comment_id):
     context = {
         'post': post,
         'comment': comment,
-    }
-    return render(request, template, context)
-
-
-def post_detail(request, id):
-    template = 'blog/detail.html'
-    post = get_object_or_404(Post, id=id, is_published=True)
-    comments = post.comments.all().order_by('pub_date')
-    form = CommentForm()
-    context = {
-        'post': post,
-        'comments': comments,
-        'form': form,
     }
     return render(request, template, context)
 

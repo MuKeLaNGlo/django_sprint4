@@ -18,7 +18,4 @@ class PostForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['first_name']
-        labels = {
-            'first_name': 'Имя',
-        }
+        fields = '__all__'

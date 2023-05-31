@@ -84,24 +84,31 @@ class Post(BaseModel):
         verbose_name='Местоположение',
     )
 
-    def update_comment_count(self):
-        self.comment_count = self.comments.count()
-        self.save()
-
     class Meta:
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
 
+    def update_comment_count(self):
+        self.comment_count = self.comments.count()
+        self.save()
+
 
 class Comment(models.Model):
+    text = models.TextField()
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
         related_name='comments'
     )
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    text = models.TextField()
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='Автор комментария'
+        )
     pub_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['pub_date']
+
+    def __str__(self):
+        return self.text
