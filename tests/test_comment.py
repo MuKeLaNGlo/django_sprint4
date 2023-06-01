@@ -1,16 +1,15 @@
 import datetime
 import random
 from http import HTTPStatus
-from typing import Tuple, Any, Type
+from typing import Any, Tuple, Type
 
 import django.test.client
 import pytest
 import pytz
-from django.db.models import TextField, DateTimeField, ForeignKey, Model
+from conftest import KeyVal, _TestModelAttrs, get_a_post_get_response_safely
+from django.db.models import DateTimeField, ForeignKey, Model, TextField
 from django.forms import BaseForm
 from django.utils import timezone
-
-from conftest import _TestModelAttrs, KeyVal, get_a_post_get_response_safely
 from fixtures.types import CommentModelAdapterT
 from form.base_form_tester import FormValidationException
 from form.comment.create_form_tester import CreateCommentFormTester

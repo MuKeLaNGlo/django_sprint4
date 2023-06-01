@@ -1,10 +1,11 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.utils import timezone
-from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Post, Category, Comment
+from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
+
 from .forms import CommentForm, PostForm, ProfileForm
+from .models import Category, Comment, Post
 
 
 def index(request):
@@ -68,12 +69,12 @@ def post_detail(request, id):
 def create_post(request):
     template = 'blog/create.html'
     if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES)
+        form = PostForm(request.POST or None, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
             post.save()
-            return redirect('blog:profile', request.user)
+            return redirect('blog:profile', request.user.username)
     else:
         form = PostForm()
     return render(request, template, {'form': form})
@@ -86,7 +87,7 @@ def edit_post(request, post_id):
     if post.author != request.user:
         return redirect('blog:post_detail', post_id)
     if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES, instance=post)
+        form = PostForm(request.POST or None, request.FILES, instance=post)
         if form.is_valid():
             form.save()
             return redirect('blog:post_detail', post_id)
@@ -99,10 +100,10 @@ def edit_post(request, post_id):
 def delete_post(request, post_id):
     template = 'blog/create.html'
     post = get_object_or_404(Post, id=post_id, author=request.user)
-    form = PostForm(request.POST, instance=post)
+    form = PostForm(request.POST or None, instance=post)
     if request.method == 'POST':
         post.delete()
-        return redirect('blog:profile', request.user)
+        return redirect('blog:profile', request.user.username)
     return render(request, template, {'form': form, 'post': post})
 
 
@@ -111,13 +112,12 @@ def add_comment(request, post_id):
     template = 'blog/comment.html'
     post = get_object_or_404(Post, id=post_id)
     if request.method == 'POST':
-        form = CommentForm(request.POST)
+        form = CommentForm(request.POST or None)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = post
             comment.author = request.user
             comment.save()
-            post.update_comment_count()
             return redirect('blog:post_detail', post_id)
     else:
         form = CommentForm()
@@ -140,7 +140,7 @@ def edit_comment(request, post_id, comment_id):
     )
 
     if request.method == 'POST':
-        form = CommentForm(request.POST, instance=comment)
+        form = CommentForm(request.POST or None, instance=comment)
         if form.is_valid():
             form.save()
             return redirect('blog:post_detail', post_id)
@@ -168,7 +168,6 @@ def delete_comment(request, post_id, comment_id):
 
     if request.method == 'POST':
         comment.delete()
-        post.update_comment_count()
         return redirect('blog:post_detail', id=post_id)
 
     context = {
@@ -198,7 +197,7 @@ def edit_profile(request):
     template = 'blog/user.html'
     user = request.user
     if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=user)
+        form = ProfileForm(request.POST or None, instance=user)
         if form.is_valid():
             form.save()
             return redirect('blog:profile', username=user.username)

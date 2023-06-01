@@ -1,6 +1,6 @@
 from conftest import TitledUrlRepr, UrlRepr
-from form.base_form_tester import (
-    UnauthorizedSubmitTester, AnonymousSubmitTester)
+from form.base_form_tester import (AnonymousSubmitTester,
+                                   UnauthorizedSubmitTester)
 from form.post.form_tester import PostFormTester
 
 
