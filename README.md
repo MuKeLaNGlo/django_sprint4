@@ -10,7 +10,7 @@ git clone https://github.com/MuKeLaNGlo/django_sprint4.git
 Затем нужно установить зависимости в виртуальное окружение, выполнив следующие команды в каталоге проекта:
 ```sh
 python -m venv venv
-source venv/Scripts/activate
+source .\venv\Scripts\activate
 pip install -r requirements.txt
 ```
 Обязательно примените миграции
